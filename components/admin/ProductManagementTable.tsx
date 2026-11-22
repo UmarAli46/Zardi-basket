@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Card,
   Table,
@@ -35,6 +36,7 @@ interface ProductManagementTableProps {
 }
 
 export default function ProductManagementTable({ initialProducts }: ProductManagementTableProps) {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [searchQuery, setSearchQuery] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -88,6 +90,7 @@ export default function ProductManagementTable({ initialProducts }: ProductManag
         text: `"${product.title}" is now ${updatedState ? 'LIVE on Store' : 'HIDDEN from Store'}!`,
         severity: 'success',
       });
+      router.refresh();
     } catch (err: any) {
       // Revert on error
       setProducts((prev) =>
@@ -142,6 +145,7 @@ export default function ProductManagementTable({ initialProducts }: ProductManag
         text: `Inventory updated to ${newStock} units in live database!`,
         severity: 'success',
       });
+      router.refresh();
     } catch (err: any) {
       // Revert on error
       setProducts((prev) =>
@@ -179,6 +183,7 @@ export default function ProductManagementTable({ initialProducts }: ProductManag
         text: 'Price updated live across store!',
         severity: 'success',
       });
+      router.refresh();
     } catch (err: any) {
       setToastMsg({ open: true, text: err.message, severity: 'error' });
     }

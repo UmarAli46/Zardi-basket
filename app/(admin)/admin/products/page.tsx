@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { getProducts } from '@/lib/db';
 import ProductManagementTable from '@/components/admin/ProductManagementTable';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function AdminProductsPage() {

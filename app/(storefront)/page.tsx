@@ -22,6 +22,7 @@ import ProductCard from '@/components/storefront/ProductCard';
 import { getProducts } from '@/lib/db';
 import BatchTraceabilityWidget from '@/components/storefront/BatchTraceabilityWidget';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Dynamic on-demand
 
 export default async function HomePage() {

@@ -4,6 +4,9 @@ import { isUserAdmin } from '@/lib/security/auth';
 import { sanitizeString } from '@/lib/security/validator';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 interface RouteContext {
   params: Promise<{ id: string }>;
 }

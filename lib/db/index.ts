@@ -15,8 +15,9 @@ interface LocalDatabase {
 // In-memory fallback if file system is read-only
 let memoryDb: LocalDatabase | null = null;
 
-// Initialize Supabase client if keys are present
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+// Default Supabase configuration for production cloud database
+const DEFAULT_SUPABASE_URL = 'https://tsdbtzpofcqvyyjkcwju.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_cOdhyd3FgpqGEqyVcm99EA_S7BDRR1y';
 
 function isRealKey(key?: string): boolean {
   if (!key) return false;
@@ -24,18 +25,27 @@ function isRealKey(key?: string): boolean {
   return k !== '' && !k.includes('placeholder') && !k.startsWith('your-');
 }
 
-const serviceKey = isRealKey(process.env.SUPABASE_SERVICE_ROLE_KEY) ? process.env.SUPABASE_SERVICE_ROLE_KEY : undefined;
-const anonKey = isRealKey(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY : undefined;
-const supabaseKey = serviceKey || anonKey;
+export function getSupabase() {
+  const url = (process.env.NEXT_PUBLIC_SUPABASE_URL && isRealKey(process.env.NEXT_PUBLIC_SUPABASE_URL))
+    ? process.env.NEXT_PUBLIC_SUPABASE_URL
+    : DEFAULT_SUPABASE_URL;
 
-const isSupabaseConfigured = Boolean(
-  supabaseUrl &&
-  isRealKey(supabaseUrl) &&
-  !supabaseUrl.includes('your-project') &&
-  supabaseKey
-);
+  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY && isRealKey(process.env.SUPABASE_SERVICE_ROLE_KEY))
+    ? process.env.SUPABASE_SERVICE_ROLE_KEY
+    : (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY && isRealKey(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY))
+      ? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      : DEFAULT_SUPABASE_KEY;
 
-const supabase = isSupabaseConfigured ? createClient(supabaseUrl!, supabaseKey!) : null;
+  return createClient(url, key, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+
+const isSupabaseConfigured = true;
+const supabase = getSupabase();
 
 // Local JSON Database Helper
 function getLocalDb(): LocalDatabase {

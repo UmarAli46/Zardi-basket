@@ -3,6 +3,7 @@ import { Container, Box, Typography, CircularProgress } from '@mui/material';
 import { getProducts } from '@/lib/db';
 import ShopCatalogClient from '@/components/storefront/ShopCatalogClient';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function ShopPage() {

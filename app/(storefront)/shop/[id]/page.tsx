@@ -4,6 +4,7 @@ import { Container, Box } from '@mui/material';
 import { getProductById, getProducts } from '@/lib/db';
 import ProductDetailClient from '@/components/storefront/ProductDetailClient';
 
+export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 interface ProductDetailPageProps {
